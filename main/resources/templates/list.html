@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="search" method="post">
+        <label>姓名：</label><input type="text" name="userName">
+        <input type="submit">
+        <a th:href="@{new}" th:text="新增"></a>
+    </form>
+
+    <table border="1" cellpadding="0" cellspacing="0">
+        <tr>
+            <th>编号</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>角色</th>
+            <th>生日</th>
+            <th>电话</th>
+            <th>地址</th>
+            <th>操作</th>
+        </tr>
+        <tr th:each="list:${list}">
+            <td th:text="${list[id]}"></td>
+            <td th:text="${list[userName]}"></td>
+            <td th:if="${list[gender]} eq 1" th:text="女"></td>
+            <td th:if="${list[gender]} eq 2" th:text="男"></td>
+            <td th:text="${list[userRole]}"></td>
+            <td th:text="${list[birthday]}"></td>
+            <td th:text="${list[phone]}"></td>
+            <td th:text="${list[address]}"></td>
+            <td>
+                <a href="#" class="delete" th:attr="did=${list[id]}">删除</a>
+                <a th:href="@{get/}+${list[id]}" >修改</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+<script type="text/javascript" th:src="@{https://cdn.bootcss.com/jquery/3.4.0/jquery.min.js}"></script>
+<script th:inline="javascript">
+
+    $(function () {
+
+        $(".delete").click(function () {
+
+            var flag = window.confirm("是否删除?");
+
+            if (flag == true) {
+
+                var o = $(this);
+
+                var id = o.attr("did");
+
+                $.ajax({
+                    url:"delete/"+id,
+                    datatype:"json",
+                    success:function (result) {
+                        if (result > 0){
+                            $(o).parent().parent().remove();
+                            alert("删除成功！");
+                        }else {
+                            alert("删除失败");
+                        }
+                    }
+                })
+            }
+        })
+    })
+
+</script>
